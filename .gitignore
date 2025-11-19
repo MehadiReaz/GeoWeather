@@ -44,3 +44,15 @@ android/local.properties
 *.log
 *.swp
 *.lock
+
+# Environment variables - DO NOT commit
+.env
+.env.local
+.env.*.local
+
+# Generated files from envied
+lib/env/env.g.dart
+
+# Generated code
+*.g.dart
+*.config.dart
