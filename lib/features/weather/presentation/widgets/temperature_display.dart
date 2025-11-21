@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geo_weather/core/theme/colors.dart';
 import 'package:geo_weather/features/weather/domain/entities/weather_entity.dart';
+import 'package:geo_weather/features/weather/presentation/widgets/weather_icon.dart';
 
 /// Widget for displaying temperature information
 class TemperatureDisplay extends StatelessWidget {
@@ -35,7 +36,13 @@ class TemperatureDisplay extends StatelessWidget {
                 color: Colors.white70,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            // Weather Icon from OpenWeatherMap API
+            WeatherIcon(
+              iconCode: weather.icon,
+              size: 120,
+            ),
+            const SizedBox(height: 16),
             Text(
               '${weather.temperature.toStringAsFixed(1)}°C',
               style: Theme.of(context).textTheme.displayLarge?.copyWith(

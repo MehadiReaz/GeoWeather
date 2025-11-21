@@ -56,3 +56,7 @@ lib/env/env.g.dart
 # Generated code
 *.g.dart
 *.config.dart
+
+
+# Misc
+docs/
