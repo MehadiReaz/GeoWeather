@@ -12,6 +12,13 @@ class TemperatureDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 600;
+
+    // Responsive sizing
+    final iconSize = isTablet ? 180.0 : 140.0;
+    final tempFontSize = isTablet ? 96.0 : 72.0;
+    final padding = isTablet ? 36.0 : 28.0;
 
     return Container(
       decoration: BoxDecoration(
@@ -34,7 +41,7 @@ class TemperatureDisplay extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
         child: Container(
-          padding: const EdgeInsets.all(28),
+          padding: EdgeInsets.all(padding),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -50,17 +57,23 @@ class TemperatureDisplay extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.location_on_rounded,
                     color: Colors.white,
-                    size: 20,
+                    size: isTablet ? 24 : 20,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    weather.city,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      weather.city,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: isTablet ? 24 : null,
+                          ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -72,12 +85,14 @@ class TemperatureDisplay extends StatelessWidget {
                   color: Colors.white.withOpacity(0.9),
                   letterSpacing: 1.5,
                   fontWeight: FontWeight.w500,
+                  fontSize: isTablet ? 16 : null,
                 ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: isTablet ? 24 : 20),
               // Weather Icon from OpenWeatherMap API
-              WeatherIcon(iconCode: weather.icon, size: 140),
-              const SizedBox(height: 20),
+              WeatherIcon(iconCode: weather.icon, size: iconSize),
+              SizedBox(height: isTablet ? 24 : 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,7 +101,7 @@ class TemperatureDisplay extends StatelessWidget {
                     weather.temperature.toStringAsFixed(0),
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
                       color: Colors.white,
-                      fontSize: 72,
+                      fontSize: tempFontSize,
                       fontWeight: FontWeight.w300,
                       height: 1,
                     ),
@@ -96,6 +111,7 @@ class TemperatureDisplay extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                       color: Colors.white.withOpacity(0.9),
                       fontWeight: FontWeight.w300,
+                      fontSize: isTablet ? 28 : null,
                     ),
                   ),
                 ],
@@ -105,13 +121,14 @@ class TemperatureDisplay extends StatelessWidget {
                 'Feels like ${weather.feelsLike.toStringAsFixed(0)}°C',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.white.withOpacity(0.85),
+                  fontSize: isTablet ? 18 : null,
                 ),
               ),
-              const SizedBox(height: 28),
+              SizedBox(height: isTablet ? 32 : 28),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 28 : 20,
+                  vertical: isTablet ? 20 : 16,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.15),
@@ -128,16 +145,18 @@ class TemperatureDisplay extends StatelessWidget {
                       label: 'High',
                       temperature: weather.maxTemperature,
                       icon: Icons.arrow_upward_rounded,
+                      isTablet: isTablet,
                     ),
                     Container(
                       width: 1,
-                      height: 40,
+                      height: isTablet ? 50 : 40,
                       color: Colors.white.withOpacity(0.3),
                     ),
                     _TemperatureRange(
                       label: 'Low',
                       temperature: weather.minTemperature,
                       icon: Icons.arrow_downward_rounded,
+                      isTablet: isTablet,
                     ),
                   ],
                 ),
@@ -154,23 +173,30 @@ class _TemperatureRange extends StatelessWidget {
   final String label;
   final double temperature;
   final IconData icon;
+  final bool isTablet;
 
   const _TemperatureRange({
     required this.label,
     required this.temperature,
     required this.icon,
+    this.isTablet = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white.withOpacity(0.9), size: 16),
+        Icon(
+          icon,
+          color: Colors.white.withOpacity(0.9),
+          size: isTablet ? 20 : 16,
+        ),
         const SizedBox(height: 4),
         Text(
           label,
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
             color: Colors.white.withOpacity(0.85),
+            fontSize: isTablet ? 14 : null,
           ),
         ),
         const SizedBox(height: 4),
@@ -179,6 +205,7 @@ class _TemperatureRange extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.w600,
+            fontSize: isTablet ? 20 : null,
           ),
         ),
       ],

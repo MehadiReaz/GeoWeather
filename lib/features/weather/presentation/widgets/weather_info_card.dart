@@ -11,10 +11,19 @@ class WeatherInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Responsive grid columns
+    int crossAxisCount = 2;
+    if (screenWidth > 900) {
+      crossAxisCount = 3;
+    } else if (screenWidth > 600) {
+      crossAxisCount = 3;
+    }
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(screenWidth > 600 ? 32 : 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -24,52 +33,82 @@ class WeatherInfoCard extends StatelessWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
-            // const SizedBox(height: 20),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              childAspectRatio: 1.4,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              children: [
-                _WeatherDetailBox(
-                  label: 'Humidity',
-                  value: '${weather.humidity}%',
-                  icon: Icons.water_drop_rounded,
-                  isDark: isDark,
-                ),
-                _WeatherDetailBox(
-                  label: 'Wind Speed',
-                  value: '${weather.windSpeed.toStringAsFixed(1)} m/s',
-                  icon: Icons.air_rounded,
-                  isDark: isDark,
-                ),
-                _WeatherDetailBox(
-                  label: 'Pressure',
-                  value: '${weather.pressure} hPa',
-                  icon: Icons.speed_rounded,
-                  isDark: isDark,
-                ),
-                _WeatherDetailBox(
-                  label: 'Visibility',
-                  value: '${(weather.visibility / 1000).toStringAsFixed(1)} km',
-                  icon: Icons.visibility_rounded,
-                  isDark: isDark,
-                ),
-                _WeatherDetailBox(
-                  label: 'Cloudiness',
-                  value: '${weather.cloudiness}%',
-                  icon: Icons.cloud_rounded,
-                  isDark: isDark,
-                ),
-                _WeatherDetailBox(
-                  label: 'Condition',
-                  value: weather.main,
-                  icon: Icons.wb_sunny_rounded,
-                  isDark: isDark,
-                ),
-              ],
+            SizedBox(height: screenWidth > 600 ? 24 : 16),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final itemWidth =
+                    (constraints.maxWidth - (crossAxisCount - 1) * 12) /
+                    crossAxisCount;
+                final itemHeight = itemWidth / 1.3;
+
+                return Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    SizedBox(
+                      width: itemWidth,
+                      height: itemHeight,
+                      child: _WeatherDetailBox(
+                        label: 'Humidity',
+                        value: '${weather.humidity}%',
+                        icon: Icons.water_drop_rounded,
+                        isDark: isDark,
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      height: itemHeight,
+                      child: _WeatherDetailBox(
+                        label: 'Wind Speed',
+                        value: '${weather.windSpeed.toStringAsFixed(1)} m/s',
+                        icon: Icons.air_rounded,
+                        isDark: isDark,
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      height: itemHeight,
+                      child: _WeatherDetailBox(
+                        label: 'Pressure',
+                        value: '${weather.pressure} hPa',
+                        icon: Icons.speed_rounded,
+                        isDark: isDark,
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      height: itemHeight,
+                      child: _WeatherDetailBox(
+                        label: 'Visibility',
+                        value:
+                            '${(weather.visibility / 1000).toStringAsFixed(1)} km',
+                        icon: Icons.visibility_rounded,
+                        isDark: isDark,
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      height: itemHeight,
+                      child: _WeatherDetailBox(
+                        label: 'Cloudiness',
+                        value: '${weather.cloudiness}%',
+                        icon: Icons.cloud_rounded,
+                        isDark: isDark,
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      height: itemHeight,
+                      child: _WeatherDetailBox(
+                        label: 'Condition',
+                        value: weather.main,
+                        icon: Icons.wb_sunny_rounded,
+                        isDark: isDark,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),

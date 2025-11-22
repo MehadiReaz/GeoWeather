@@ -6,6 +6,7 @@ import 'package:geo_weather/core/network/dio_client.dart';
 import 'package:geo_weather/core/network/network_info.dart';
 import 'package:geo_weather/core/services/storage_service.dart';
 import 'package:geo_weather/core/services/location_service.dart';
+import 'package:geo_weather/core/controllers/theme_controller.dart';
 import 'package:geo_weather/env/env.dart';
 
 /// Sets up the dependency injection container for the entire application.
@@ -48,6 +49,10 @@ Future<void> setupServiceLocator() async {
 
   // Location service for getting device GPS coordinates
   Get.put<LocationService>(LocationServiceImpl());
+
+  // === Controllers ===
+  // Theme controller for managing app theme
+  Get.put<ThemeController>(ThemeController(Get.find()), permanent: true);
 
   // === Environment Configuration ===
   // Secure API key loaded from environment variables via envied

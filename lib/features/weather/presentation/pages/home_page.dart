@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geo_weather/core/widgets/custom_app_bar.dart';
-import 'package:geo_weather/core/widgets/loading_widget.dart';
+import 'package:geo_weather/core/controllers/theme_controller.dart';
 import 'package:geo_weather/features/weather/presentation/controllers/weather_controller.dart';
 import 'package:geo_weather/features/weather/presentation/widgets/weather_info_card.dart';
 import 'package:geo_weather/features/weather/presentation/widgets/temperature_display.dart';
+import 'package:geo_weather/features/weather/presentation/widgets/shimmer_loading.dart';
 
 /// Main home page displaying current weather information.
 ///
@@ -25,6 +26,11 @@ class HomePage extends GetView<WeatherController> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    final size = MediaQuery.of(context).size;
+    final isTablet = size.width > 600;
+    final horizontalPadding = isTablet ? size.width * 0.15 : 20.0;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: CustomAppBar(
@@ -32,16 +38,22 @@ class HomePage extends GetView<WeatherController> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: controller.refreshWeather,
-            tooltip: 'Refresh',
+          Obx(
+            () => IconButton(
+              icon: Icon(
+                themeController.isDarkMode
+                    ? Icons.light_mode_rounded
+                    : Icons.dark_mode_rounded,
+              ),
+              onPressed: themeController.toggleTheme,
+              tooltip: themeController.isDarkMode ? 'Light Mode' : 'Dark Mode',
+            ),
           ),
         ],
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const LoadingWidget(message: 'Fetching weather...');
+          return const WeatherShimmerLoading();
         }
 
         if (controller.error.value != null) {
@@ -104,13 +116,18 @@ class HomePage extends GetView<WeatherController> {
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: 20,
+                ),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     TemperatureDisplay(weather: weather),
                     const SizedBox(height: 20),
                     WeatherInfoCard(weather: weather),
-                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: MediaQuery.of(context).padding.bottom + 20,
+                    ),
                   ]),
                 ),
               ),

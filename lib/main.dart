@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:geo_weather/app/routes/app_pages.dart';
 import 'package:geo_weather/app/routes/app_routes.dart';
 import 'package:geo_weather/core/theme/app_theme.dart';
+import 'package:geo_weather/core/controllers/theme_controller.dart';
 import 'package:geo_weather/injection/injection_container.dart';
 
 /// Entry point of the GeoWeather application.
@@ -26,20 +27,25 @@ class GeoWeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'GeoWeather',
+    final themeController = Get.find<ThemeController>();
 
-      // Theme configuration supporting both light and dark modes
-      theme: AppTheme.lightTheme(),
-      darkTheme: AppTheme.darkTheme(),
-      themeMode: ThemeMode.system, // Follows system preference
-      // Navigation configuration
-      initialRoute: AppRoutes.home,
-      getPages: AppPages.pages,
+    return Obx(
+      () => GetMaterialApp(
+        title: 'GeoWeather',
 
-      // UI preferences
-      debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.native, // Native platform transitions
+        // Theme configuration supporting both light and dark modes
+        theme: AppTheme.lightTheme(),
+        darkTheme: AppTheme.darkTheme(),
+        themeMode: themeController.themeMode,
+
+        // Navigation configuration
+        initialRoute: AppRoutes.home,
+        getPages: AppPages.pages,
+
+        // UI preferences
+        debugShowCheckedModeBanner: false,
+        defaultTransition: Transition.native, // Native platform transitions
+      ),
     );
   }
 }
