@@ -1,6 +1,55 @@
 # GeoWeather
 
-A clean, modular Flutter weather application that displays real-time weather conditions using the OpenWeatherMap API. The app features automatic location detection, local caching, and a modern UI built with GetX for state management.
+A clean, modular Flutter weather application built as a coding challenge solution. This app demonstrates professional software engineering practices with Clean Architecture principles, GetX state management, and displays real-time weather conditions using the OpenWeatherMap API.
+
+## 📋 Challenge Requirements - Implementation Status
+
+This project fulfills all the core requirements of the **Software Engineer (Flutter) Coding Challenge**:
+
+### ✅ Core Features Implemented
+
+1. **Single-Screen Weather Application**
+   - ✅ Home Screen with automatic location detection
+   - ✅ Displays current weather for user's geographical location
+
+2. **Required Data Points**
+   - ✅ City Name / Location Name
+   - ✅ Current Temperature (Celsius/Fahrenheit)
+   - ✅ Weather Condition (Clear, Rain, Clouds, etc.)
+   - ✅ Weather Icon
+   - ✅ Minimum and Maximum Daily Temperatures
+
+3. **Technical Requirements**
+   - ✅ Clean Architecture implementation with proper layer separation
+   - ✅ GetX for state management and dependency injection
+   - ✅ OpenWeatherMap API integration
+   - ✅ Automatic location detection using Geolocator
+
+4. **Additional Features Implemented**
+   - ✅ Offline support with local caching (Shared Preferences)
+   - ✅ Network connectivity checking
+   - ✅ Pull-to-refresh functionality
+   - ✅ Error handling and loading states
+   - ✅ Material Design UI with theme support
+   - ✅ Secure API key management with Envied package
+
+### 📸 Screenshots
+
+<div align="center">
+  <img src="screenshots/Screenshot_1763827882.png" width="200" alt="" />
+  <img src="screenshots/Screenshot_1763827906.png" width="200" alt="" />
+  <img src="screenshots/Screenshot_1763827919.png" width="200" alt="" />
+  <img src="screenshots/Screenshot_1763827934.png" width="200" alt="" />
+</div>
+
+<div align="center">
+  <img src="screenshots/Screenshot_1763827949.png" width="200" alt="" />
+  <img src="screenshots/Screenshot_1763827954.png" width="200" alt="" />
+  <img src="screenshots/Screenshot_1763827988.png" width="200" alt="" />
+  <img src="screenshots/Screenshot_1763827991.png" width="200" alt="" />
+</div>
+
+---
 
 ## Features
 
@@ -16,55 +65,93 @@ A clean, modular Flutter weather application that displays real-time weather con
 
 ```
 lib/
-├── main.dart                    # App entry point
+├── main.dart                    # App entry point with GetX initialization
 ├── app/
 │   ├── routes/
 │   │   ├── app_pages.dart       # Navigation pages/routes
 │   │   └── app_routes.dart      # Route constants
 │   └── bindings/
-│       └── initial_bindings.dart # App-wide bindings
-├── core/
+│       └── initial_bindings.dart # App-wide dependency bindings
+├── core/                        # Shared core functionality
 │   ├── constants/               # App and API constants
-│   ├── errors/                  # Failures and exceptions
-│   ├── network/                 # Dio client and network info
+│   ├── errors/                  # Custom failures and exceptions
+│   ├── network/                 # Dio HTTP client configuration
 │   ├── services/                # Storage and location services
-│   ├── theme/                   # Colors, text styles, theme
-│   ├── utils/                   # Extensions and helpers
+│   ├── theme/                   # App theme, colors, text styles
+│   ├── utils/                   # Extensions and helper utilities
 │   └── widgets/                 # Reusable UI components
-├── features/
-│   ├── weather/                 # Weather feature
-│   │   ├── data/                # Datasources, models, repositories
-│   │   ├── domain/              # Entities, repositories, usecases
-│   │   └── presentation/        # Controllers, pages, widgets, bindings
-│   └── settings/                # Settings feature
+├── features/                    # Feature-based modules (Clean Architecture)
+│   ├── weather/                 # Weather feature module
+│   │   ├── data/                # Data layer
+│   │   │   ├── datasources/     # Remote (API) & Local (Cache) sources
+│   │   │   ├── models/          # Data models with JSON serialization
+│   │   │   └── repositories/    # Repository implementations
+│   │   ├── domain/              # Domain layer (Business logic)
+│   │   │   ├── entities/        # Core business entities
+│   │   │   ├── repositories/    # Repository contracts (abstract)
+│   │   │   └── usecases/        # Business use cases
+│   │   └── presentation/        # Presentation layer
+│   │       ├── controllers/     # GetX controllers for state management
+│   │       ├── pages/           # UI screens
+│   │       ├── widgets/         # Feature-specific widgets
+│   │       └── bindings/        # GetX dependency bindings
+│   └── settings/                # Settings feature (bonus)
 │       ├── data/
 │       ├── domain/
 │       └── presentation/
 ├── injection/
-│   └── injection_container.dart # Dependency injection setup
+│   └── injection_container.dart # Global dependency injection setup
 └── env/
     ├── env.dart                 # Environment variables (envied)
+    ├── env.g.dart              # Generated environment file
     └── ENV_SETUP.md            # Environment setup guide
 ```
 
 ## Architecture
 
-This project follows **Clean Architecture** principles with layered separation:
+This project follows **Clean Architecture** principles with layered separation as per the challenge requirements:
 
-- **Presentation Layer**: UI components, pages, and controllers (GetX)
+### 📐 Architecture Layers
+
+- **Presentation Layer**: UI components, pages, and GetX controllers
+  - Handles user interactions and UI state
+  - Uses GetX for reactive state management
+  
 - **Domain Layer**: Business logic, entities, and use cases
-- **Data Layer**: Repositories, datasources, and models
+  - Core business rules independent of frameworks
+  - Defines contracts through abstract repositories
+  
+- **Data Layer**: Repositories, datasources (remote/local), and models
+  - API integration with OpenWeatherMap
+  - Local caching with Shared Preferences
+  - Network connectivity management
+
+### 🎯 Design Patterns Used
+
+- **Repository Pattern**: Abstracts data sources
+- **Use Case Pattern**: Single responsibility business logic
+- **Dependency Injection**: GetX dependency management
+- **Either Pattern**: Functional error handling with Dartz
+- **Factory Pattern**: Model creation and parsing
 
 ## Technologies & Packages
 
-- **Flutter**: UI framework
-- **GetX**: State management and dependency injection
-- **Dio**: HTTP client for API requests
-- **Envied**: Secure environment variable management
-- **Connectivity Plus**: Network connectivity checking
-- **Shared Preferences**: Local data persistence
-- **Geolocator**: Device location services
-- **Dartz**: Functional programming (Either/Option)
+### Core Technologies
+- **Flutter 3.10+**: UI framework
+- **Dart 3.10+**: Programming language
+- **GetX**: State management and dependency injection (as per requirements)
+- **Clean Architecture**: Layered architecture pattern (as per requirements)
+
+### Key Packages
+- **Dio**: HTTP client for OpenWeatherMap API requests
+- **Envied**: Secure environment variable management for API keys
+- **Connectivity Plus**: Network connectivity status checking
+- **Shared Preferences**: Local data caching for offline support
+- **Geolocator**: Automatic device location detection
+- **Permission Handler**: Location permission management
+- **Dartz**: Functional programming (Either type for error handling)
+- **Get Storage**: Lightweight local storage
+- **Intl**: Date formatting and localization
 
 ## Setup Instructions
 
@@ -156,24 +243,31 @@ Mock helpers are available in `test/test_utils/mock_helpers.dart`
 
 ## Project Features
 
-### Weather Display
-- Current temperature and "feels like" temperature
-- Weather condition and description
-- Min/Max temperatures
-- Humidity, wind speed, pressure
-- Visibility and cloudiness
-- Last updated time
+### 🌤️ Weather Display (Core Requirements)
+- **Automatic Location Detection**: Uses GPS to get current coordinates
+- **City Name/Location**: Displays detected city and country
+- **Current Temperature**: Shows temperature in Celsius/Fahrenheit
+- **Weather Condition**: Clear, Rain, Clouds, etc. with description
+- **Weather Icon**: Dynamic icons based on condition
+- **Min/Max Temperatures**: Daily temperature range
+- **Additional Data**: Humidity, wind speed, pressure, visibility, cloudiness
+- **Last Updated Time**: Timestamp of last data fetch
 
-### Settings Page
-- Dark mode toggle
-- Temperature unit selection (Celsius/Fahrenheit)
-- Language preferences
+### ⚡ Additional Features (Beyond Requirements)
+- **Offline Support**: Caches weather data locally for offline access
+- **Network Awareness**: Checks connectivity before making API calls
+- **Pull-to-Refresh**: Swipe down to refresh weather data
+- **Error Handling**: User-friendly error messages and states
+- **Loading States**: Skeleton loaders and progress indicators
+- **Settings Page**: Dark mode, temperature units, preferences
+- **Search by City**: Manual city search capability
 
-### Smart Features
-- **Offline Support**: Caches weather data locally
-- **Network Aware**: Checks connectivity before API calls
-- **Auto-Refresh**: Pull-to-refresh functionality
-- **Error Handling**: Comprehensive error states and messages
+### 🎨 UI/UX Features
+- **Material Design**: Modern, clean interface
+- **Theme Support**: Light and dark mode
+- **Responsive Layout**: Adapts to different screen sizes
+- **Animated Transitions**: Smooth page and state transitions
+- **Error States**: Clear error messages with retry options
 
 ## Regenerating Code
 
@@ -205,12 +299,40 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## Future Enhancements
 
-- [ ] Weather forecast (5-day, 15-day)
-- [ ] Multiple saved locations
-- [ ] Weather alerts
-- [ ] Weather maps and radar
-- [ ] Localization support
-- [ ] Advanced analytics
+- [ ] 5-day and 15-day weather forecasts
+- [ ] Multiple saved locations with favorites
+- [ ] Weather alerts and notifications
+- [ ] Weather maps and radar visualization
+- [ ] Multi-language localization support
+- [ ] Weather widgets for home screen
+- [ ] Advanced analytics and weather history
+- [ ] Social sharing of weather conditions
+
+---
+
+## 🎓 Challenge Completion Summary
+
+This project successfully implements all requirements of the **Software Engineer (Flutter) Coding Challenge**:
+
+1. ✅ **Clean Architecture**: Proper separation of concerns with Presentation, Domain, and Data layers
+2. ✅ **GetX State Management**: Used throughout for reactive UI and dependency injection
+3. ✅ **OpenWeatherMap API**: Integrated for real-time weather data
+4. ✅ **Automatic Location**: GPS-based coordinate detection on startup
+5. ✅ **Required Data Display**: All mandatory fields (city, temp, condition, icon, min/max)
+6. ✅ **Single Screen MVP**: Focused home screen with weather information
+7. ✅ **Professional Standards**: Production-ready code with error handling and testing
+8. ✅ **GitHub Repository**: Public repository with complete source code
+9. ✅ **Documentation**: Comprehensive README with setup instructions
+
+### Bonus Implementations
+- Offline caching for better UX
+- Settings page for user preferences
+- Pull-to-refresh functionality
+- Network connectivity awareness
+- Secure API key management
+- Unit test structure
+
+---
 
 ## Contributing
 

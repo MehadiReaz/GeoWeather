@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geo_weather/core/theme/colors.dart';
+import 'package:geo_weather/core/theme/weather_theme.dart';
 import 'package:geo_weather/features/weather/domain/entities/weather_entity.dart';
 import 'package:geo_weather/features/weather/presentation/widgets/weather_icon.dart';
 
@@ -46,6 +46,14 @@ class _TemperatureDisplayState extends State<TemperatureDisplay>
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
+    // Get dynamic gradient colors based on temperature and weather
+    final gradientColors = WeatherTheme.getDynamicGradient(
+      temperature: widget.weather.temperature,
+      weatherCondition: widget.weather.main,
+      isDark: isDark,
+      prioritizeCondition: true,
+    );
+
     // Responsive sizing
     final iconSize = isTablet ? 180.0 : 140.0;
     final tempFontSize = isTablet ? 96.0 : 72.0;
@@ -56,14 +64,12 @@ class _TemperatureDisplayState extends State<TemperatureDisplay>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0xFF1E3A8A), const Color(0xFF3B82F6)]
-              : [const Color(0xFF60A5FA), const Color(0xFF3B82F6)],
+          colors: gradientColors,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
+            color: gradientColors[0].withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
