@@ -14,7 +14,7 @@ import 'package:geo_weather/core/errors/failures.dart';
 /// - Consistency: Standardized interface across all use cases
 ///
 /// Type Parameters:
-/// - [Type]: The success return type wrapped in Either
+/// - [T]: The success return type wrapped in Either
 /// - [Params]: The parameters required to execute this use case
 ///
 /// Example usage:
@@ -30,13 +30,13 @@ import 'package:geo_weather/core/errors/failures.dart';
 ///   }
 /// }
 /// ```
-abstract class UseCase<Type, Params> {
+abstract class UseCase<T, Params> {
   /// Executes this use case with the given parameters.
   ///
   /// Returns Either:
   /// - Left: Contains a Failure if the operation failed
-  /// - Right: Contains the success value of type [Type]
-  Future<Either<Failure, Type>> call(Params params);
+  /// - Right: Contains the success value of type [T]
+  Future<Either<Failure, T>> call(Params params);
 }
 
 /// Special parameter type for use cases that don't require any parameters.

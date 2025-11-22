@@ -12,7 +12,7 @@ import 'package:geo_weather/features/weather/domain/entities/weather_entity.dart
 /// - Domain layer doesn't know where data comes from (API, cache, etc.)
 /// - Easy to swap implementations for testing
 /// - Single place to define all weather data operations
-/// - Enforces consistent return types (Either<Failure, Data>)
+/// - Enforces consistent return types with `Either<Failure, Data>`
 ///
 /// The actual implementation lives in the data layer and handles:
 /// - Network requests to weather APIs

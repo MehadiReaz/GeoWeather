@@ -39,7 +39,7 @@ class GeoWeatherApp extends StatelessWidget {
         themeMode: themeController.themeMode,
 
         // Navigation configuration
-        initialRoute: AppRoutes.home,
+        initialRoute: AppRoutes.splash,
         getPages: AppPages.pages,
 
         // UI preferences

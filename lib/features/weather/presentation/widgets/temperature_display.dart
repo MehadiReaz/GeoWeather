@@ -4,10 +4,41 @@ import 'package:geo_weather/features/weather/domain/entities/weather_entity.dart
 import 'package:geo_weather/features/weather/presentation/widgets/weather_icon.dart';
 
 /// Widget for displaying temperature information
-class TemperatureDisplay extends StatelessWidget {
+class TemperatureDisplay extends StatefulWidget {
   final WeatherEntity weather;
 
   const TemperatureDisplay({super.key, required this.weather});
+
+  @override
+  State<TemperatureDisplay> createState() => _TemperatureDisplayState();
+}
+
+class _TemperatureDisplayState extends State<TemperatureDisplay>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 0.95, end: 1.05).animate(
+      CurvedAnimation(
+        parent: _pulseController,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +63,7 @@ class TemperatureDisplay extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -47,8 +78,8 @@ class TemperatureDisplay extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.05),
+                Colors.white.withValues(alpha: 0.1),
+                Colors.white.withValues(alpha: 0.05),
               ],
             ),
           ),
@@ -65,7 +96,7 @@ class TemperatureDisplay extends StatelessWidget {
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
-                      weather.city,
+                      widget.weather.city,
                       style: Theme.of(context).textTheme.headlineMedium
                           ?.copyWith(
                             color: Colors.white,
@@ -80,9 +111,9 @@ class TemperatureDisplay extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                weather.description.toUpperCase(),
+                widget.weather.description.toUpperCase(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   letterSpacing: 1.5,
                   fontWeight: FontWeight.w500,
                   fontSize: isTablet ? 16 : null,
@@ -90,15 +121,18 @@ class TemperatureDisplay extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: isTablet ? 24 : 20),
-              // Weather Icon from OpenWeatherMap API
-              WeatherIcon(iconCode: weather.icon, size: iconSize),
+              // Weather Icon from OpenWeatherMap API with pulse animation
+              ScaleTransition(
+                scale: _pulseAnimation,
+                child: WeatherIcon(iconCode: widget.weather.icon, size: iconSize),
+              ),
               SizedBox(height: isTablet ? 24 : 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    weather.temperature.toStringAsFixed(0),
+                    widget.weather.temperature.toStringAsFixed(0),
                     style: Theme.of(context).textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontSize: tempFontSize,
@@ -109,7 +143,7 @@ class TemperatureDisplay extends StatelessWidget {
                   Text(
                     '°C',
                     style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontWeight: FontWeight.w300,
                       fontSize: isTablet ? 28 : null,
                     ),
@@ -118,9 +152,9 @@ class TemperatureDisplay extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Feels like ${weather.feelsLike.toStringAsFixed(0)}°C',
+                'Feels like ${widget.weather.feelsLike.toStringAsFixed(0)}°C',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.white.withOpacity(0.85),
+                  color: Colors.white.withValues(alpha: 0.85),
                   fontSize: isTablet ? 18 : null,
                 ),
               ),
@@ -131,10 +165,10 @@ class TemperatureDisplay extends StatelessWidget {
                   vertical: isTablet ? 20 : 16,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -143,18 +177,18 @@ class TemperatureDisplay extends StatelessWidget {
                   children: [
                     _TemperatureRange(
                       label: 'High',
-                      temperature: weather.maxTemperature,
+                      temperature: widget.weather.maxTemperature,
                       icon: Icons.arrow_upward_rounded,
                       isTablet: isTablet,
                     ),
                     Container(
                       width: 1,
                       height: isTablet ? 50 : 40,
-                      color: Colors.white.withOpacity(0.3),
+                      color: Colors.white.withValues(alpha: 0.3),
                     ),
                     _TemperatureRange(
                       label: 'Low',
-                      temperature: weather.minTemperature,
+                      temperature: widget.weather.minTemperature,
                       icon: Icons.arrow_downward_rounded,
                       isTablet: isTablet,
                     ),
@@ -188,14 +222,14 @@ class _TemperatureRange extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white.withValues(alpha: 0.9),
           size: isTablet ? 20 : 16,
         ),
         const SizedBox(height: 4),
         Text(
           label,
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: Colors.white.withOpacity(0.85),
+            color: Colors.white.withValues(alpha: 0.85),
             fontSize: isTablet ? 14 : null,
           ),
         ),

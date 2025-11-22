@@ -2,8 +2,7 @@ import 'package:get/get.dart';
 import 'package:geo_weather/app/routes/app_routes.dart';
 import 'package:geo_weather/features/weather/presentation/pages/home_page.dart';
 import 'package:geo_weather/features/weather/presentation/bindings/weather_binding.dart';
-import 'package:geo_weather/features/settings/presentation/pages/settings_page.dart';
-import 'package:geo_weather/features/settings/presentation/bindings/settings_binding.dart';
+import 'package:geo_weather/features/splash/presentation/pages/splash_page.dart';
 
 /// Centralized route configuration for the entire application.
 ///
@@ -20,16 +19,15 @@ import 'package:geo_weather/features/settings/presentation/bindings/settings_bin
 abstract class AppPages {
   static final pages = [
     GetPage(
+      name: AppRoutes.splash,
+      page: () => const SplashPage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
       name: AppRoutes.home,
       page: () => const HomePage(),
       binding: WeatherBinding(),
       transition: Transition.fadeIn,
-    ),
-    GetPage(
-      name: AppRoutes.settings,
-      page: () => const SettingsPage(),
-      binding: SettingsBinding(),
-      transition: Transition.leftToRight,
     ),
   ];
 }

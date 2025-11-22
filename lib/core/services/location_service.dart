@@ -37,6 +37,7 @@ abstract class LocationService {
   Future<LocationPermission> checkPermission();
   Future<LocationPermission> requestPermission();
   Future<LocationData> getCurrentLocation();
+  Stream<LocationData> getLocationStream();
 }
 
 /// Implementation of LocationService using Geolocator
@@ -106,5 +107,23 @@ class LocationServiceImpl implements LocationService {
     } catch (e) {
       throw LocationException(message: 'Failed to get current location: $e');
     }
+  }
+
+  @override
+  Stream<LocationData> getLocationStream() {
+    const locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 100, // Update every 100 meters
+    );
+
+    return Geolocator.getPositionStream(locationSettings: locationSettings)
+        .map((position) => LocationData(
+              latitude: position.latitude,
+              longitude: position.longitude,
+              accuracy: position.accuracy,
+              timestamp: DateTime.fromMillisecondsSinceEpoch(
+                position.timestamp.millisecondsSinceEpoch,
+              ),
+            ));
   }
 }

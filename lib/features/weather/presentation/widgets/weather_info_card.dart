@@ -117,7 +117,7 @@ class WeatherInfoCard extends StatelessWidget {
   }
 }
 
-class _WeatherDetailBox extends StatelessWidget {
+class _WeatherDetailBox extends StatefulWidget {
   final String label;
   final String value;
   final IconData icon;
@@ -131,46 +131,81 @@ class _WeatherDetailBox extends StatelessWidget {
   });
 
   @override
+  State<_WeatherDetailBox> createState() => _WeatherDetailBoxState();
+}
+
+class _WeatherDetailBoxState extends State<_WeatherDetailBox>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _hoverController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _hoverController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withOpacity(0.05)
-            : AppColors.primary.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : AppColors.primary.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: AppColors.primary, size: 24),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(
-                context,
-              ).textTheme.bodySmall?.color?.withOpacity(0.7),
+    return MouseRegion(
+      onEnter: (_) => _hoverController.forward(),
+      onExit: (_) => _hoverController.reverse(),
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: widget.isDark
+                ? Colors.white.withValues(alpha: 0.05)
+                : AppColors.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: widget.isDark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : AppColors.primary.withValues(alpha: 0.1),
+              width: 1,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(widget.icon, color: AppColors.primary, size: 24),
+              const SizedBox(height: 6),
+              Text(
+                widget.label,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                widget.value,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
