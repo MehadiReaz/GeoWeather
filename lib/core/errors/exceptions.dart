@@ -23,10 +23,7 @@ class CacheException extends AppException {
 class ApiException extends AppException {
   final int? statusCode;
 
-  ApiException({
-    super.message = 'API error occurred',
-    this.statusCode,
-  });
+  ApiException({super.message = 'API error occurred', this.statusCode});
 }
 
 class InvalidDataException extends AppException {

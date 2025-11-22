@@ -10,11 +10,11 @@ import 'package:geo_weather/injection/injection_container.dart';
 void main() async {
   // Ensure Flutter binding is initialized before any async operations
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Set up dependency injection container with all core services
   // This includes network, storage, location services, and API configuration
   await setupServiceLocator();
-  
+
   // Launch the application
   runApp(const GeoWeatherApp());
 }
@@ -28,16 +28,15 @@ class GeoWeatherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'GeoWeather',
-      
+
       // Theme configuration supporting both light and dark modes
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
       themeMode: ThemeMode.system, // Follows system preference
-      
       // Navigation configuration
       initialRoute: AppRoutes.home,
       getPages: AppPages.pages,
-      
+
       // UI preferences
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.native, // Native platform transitions

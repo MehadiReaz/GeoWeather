@@ -4,13 +4,13 @@ import 'package:geo_weather/core/services/storage_service.dart';
 import 'package:geo_weather/core/services/logger_service.dart';
 
 /// Controller managing app settings and user preferences.
-/// 
+///
 /// This controller handles:
 /// - Theme mode (light/dark)
 /// - Temperature units (Celsius/Fahrenheit/Kelvin)
 /// - Language preferences
 /// - Persistent storage of all settings
-/// 
+///
 /// Settings are automatically saved to local storage and loaded on app startup.
 class SettingsController extends GetxController {
   final StorageService storageService;
@@ -36,7 +36,7 @@ class SettingsController extends GetxController {
   }
 
   /// Loads all saved settings from local storage.
-  /// 
+  ///
   /// If no saved settings exist, defaults are used:
   /// - Dark mode: false (light theme)
   /// - Temperature: Celsius
@@ -62,7 +62,10 @@ class SettingsController extends GetxController {
         language.value = savedLanguage;
       }
 
-      LoggerService.info('Settings loaded successfully', tag: 'SettingsController');
+      LoggerService.info(
+        'Settings loaded successfully',
+        tag: 'SettingsController',
+      );
     } catch (e) {
       LoggerService.error(
         'Failed to load settings',
@@ -73,14 +76,14 @@ class SettingsController extends GetxController {
   }
 
   /// Toggles between light and dark theme modes.
-  /// 
+  ///
   /// The theme change is immediately applied to the app and saved to storage.
   Future<void> toggleDarkMode(bool value) async {
     try {
       isDarkMode.value = value;
       await storageService.saveBool(_darkModeKey, value);
       _applyTheme(value);
-      
+
       LoggerService.info(
         'Theme changed to ${value ? "dark" : "light"} mode',
         tag: 'SettingsController',
@@ -100,19 +103,19 @@ class SettingsController extends GetxController {
   }
 
   /// Changes the temperature unit preference.
-  /// 
+  ///
   /// Supported units:
   /// - Celsius (°C)
   /// - Fahrenheit (°F)
   /// - Kelvin (K)
-  /// 
+  ///
   /// Note: This changes the display preference only. The actual temperature
   /// conversion logic should be implemented in the presentation layer.
   Future<void> changeTemperatureUnit(String unit) async {
     try {
       temperatureUnit.value = unit;
       await storageService.saveString(_temperatureUnitKey, unit);
-      
+
       LoggerService.info(
         'Temperature unit changed to $unit',
         tag: 'SettingsController',
@@ -127,26 +130,26 @@ class SettingsController extends GetxController {
   }
 
   /// Changes the app language preference.
-  /// 
+  ///
   /// Supported languages:
   /// - English
   /// - Spanish
   /// - French
   /// - German
   /// (Add more as needed)
-  /// 
+  ///
   /// Note: Actual localization needs to be implemented using GetX's
   /// internationalization or other i18n packages.
   Future<void> changeLanguage(String lang) async {
     try {
       language.value = lang;
       await storageService.saveString(_languageKey, lang);
-      
+
       LoggerService.info(
         'Language changed to $lang',
         tag: 'SettingsController',
       );
-      
+
       // TODO: Implement actual language change using GetX translations
       // Get.updateLocale(Locale(languageCode));
     } catch (e) {
@@ -159,7 +162,7 @@ class SettingsController extends GetxController {
   }
 
   /// Resets all settings to their default values.
-  /// 
+  ///
   /// This clears all stored preferences and resets to:
   /// - Light theme
   /// - Celsius temperature
@@ -173,11 +176,14 @@ class SettingsController extends GetxController {
       isDarkMode.value = false;
       temperatureUnit.value = 'Celsius';
       language.value = 'English';
-      
+
       _applyTheme(false);
 
-      LoggerService.info('Settings reset to defaults', tag: 'SettingsController');
-      
+      LoggerService.info(
+        'Settings reset to defaults',
+        tag: 'SettingsController',
+      );
+
       Get.snackbar(
         'Settings Reset',
         'All settings have been reset to default values',
@@ -192,4 +198,3 @@ class SettingsController extends GetxController {
     }
   }
 }
-

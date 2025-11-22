@@ -8,17 +8,17 @@ import 'package:geo_weather/features/weather/domain/usecases/get_weather_for_cit
 import 'package:geo_weather/features/weather/presentation/controllers/weather_controller.dart';
 
 /// Dependency injection binding for the weather feature.
-/// 
+///
 /// This binding sets up all dependencies needed for the weather feature
 /// when navigating to weather-related pages. It follows GetX's lazy
 /// instantiation pattern.
-/// 
+///
 /// Dependency hierarchy (bottom-up):
 /// 1. Datasources (local & remote)
 /// 2. Repository (uses datasources)
 /// 3. Use cases (use repository)
 /// 4. Controller (uses use cases)
-/// 
+///
 /// Using lazyPut means these dependencies are only created when first accessed,
 /// improving app performance. The controller uses Get.put to ensure it's
 /// immediately available.

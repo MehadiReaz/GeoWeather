@@ -3,15 +3,15 @@ import 'package:geo_weather/core/constants/api_constants.dart';
 import 'package:geo_weather/features/weather/data/models/weather_model.dart';
 
 /// Interface for fetching weather data from remote API sources.
-/// 
+///
 /// This datasource is responsible for all external API calls related to weather.
 /// It's part of the data layer and should only be accessed by repositories.
-/// 
+///
 /// Responsibilities:
 /// - Make HTTP requests to OpenWeatherMap API
 /// - Transform raw API responses into WeatherModel objects
 /// - Throw appropriate exceptions for error cases
-/// 
+///
 /// Does NOT handle:
 /// - Caching (that's the repository's job)
 /// - Business logic (that's the domain layer's job)
@@ -32,7 +32,7 @@ abstract class WeatherRemoteDatasource {
 }
 
 /// Concrete implementation of WeatherRemoteDatasource using OpenWeatherMap API.
-/// 
+///
 /// This implementation uses our DioClient to make HTTP requests and handles
 /// the specifics of the OpenWeatherMap API format.
 class WeatherRemoteDatasourceImpl implements WeatherRemoteDatasource {

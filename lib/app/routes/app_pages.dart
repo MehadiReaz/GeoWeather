@@ -6,12 +6,12 @@ import 'package:geo_weather/features/settings/presentation/pages/settings_page.d
 import 'package:geo_weather/features/settings/presentation/bindings/settings_binding.dart';
 
 /// Centralized route configuration for the entire application.
-/// 
+///
 /// This class defines all navigation routes and their associated:
 /// - Page widgets
 /// - Dependency injection bindings
 /// - Transition animations
-/// 
+///
 /// Benefits:
 /// - Single source of truth for app navigation
 /// - Automatic dependency injection per route

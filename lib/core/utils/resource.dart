@@ -1,19 +1,19 @@
 /// Generic wrapper class for representing asynchronous operation states.
-/// 
+///
 /// This class provides a type-safe way to handle loading, success, and error
 /// states in the UI layer. It's particularly useful with reactive state management
 /// like GetX, replacing the need for separate loading, error, and data observables.
-/// 
+///
 /// Benefits:
 /// - Single observable for all states
 /// - Type-safe data access
 /// - Clear state transitions
 /// - Easy to handle in UI with pattern matching
-/// 
+///
 /// Example usage:
 /// ```dart
 /// final weatherState = Rx<Resource<WeatherEntity>>(Resource.loading());
-/// 
+///
 /// // In repository:
 /// weatherState.value = Resource.loading();
 /// final result = await fetchWeather();
@@ -21,7 +21,7 @@
 ///   (failure) => weatherState.value = Resource.error(failure.message),
 ///   (data) => weatherState.value = Resource.success(data),
 /// );
-/// 
+///
 /// // In UI:
 /// Obx(() => weatherState.value.when(
 ///   loading: () => CircularProgressIndicator(),
@@ -34,52 +34,36 @@ class Resource<T> {
   final T? data;
   final String? message;
 
-  const Resource._({
-    required this.state,
-    this.data,
-    this.message,
-  });
+  const Resource._({required this.state, this.data, this.message});
 
   /// Creates a loading state resource.
-  /// 
+  ///
   /// Used when an asynchronous operation is in progress.
   /// Optionally can include previously loaded data for optimistic updates.
   factory Resource.loading({T? data}) {
-    return Resource._(
-      state: ResourceState.loading,
-      data: data,
-    );
+    return Resource._(state: ResourceState.loading, data: data);
   }
 
   /// Creates a success state resource with data.
-  /// 
+  ///
   /// Used when an operation completes successfully.
   factory Resource.success(T data) {
-    return Resource._(
-      state: ResourceState.success,
-      data: data,
-    );
+    return Resource._(state: ResourceState.success, data: data);
   }
 
   /// Creates an error state resource with an error message.
-  /// 
+  ///
   /// Used when an operation fails.
   /// Optionally can include previously loaded data to show stale data.
   factory Resource.error(String message, {T? data}) {
-    return Resource._(
-      state: ResourceState.error,
-      message: message,
-      data: data,
-    );
+    return Resource._(state: ResourceState.error, message: message, data: data);
   }
 
   /// Creates an initial/idle state resource.
-  /// 
+  ///
   /// Used when no operation has been started yet.
   factory Resource.initial() {
-    return const Resource._(
-      state: ResourceState.initial,
-    );
+    return const Resource._(state: ResourceState.initial);
   }
 
   // Convenience getters for checking state
@@ -89,9 +73,9 @@ class Resource<T> {
   bool get isInitial => state == ResourceState.initial;
 
   /// Pattern matching method for handling different states.
-  /// 
+  ///
   /// This provides a clean way to handle all possible states in the UI.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// resource.when(
@@ -120,10 +104,10 @@ class Resource<T> {
   }
 
   /// Optional pattern matching - only handles states you care about.
-  /// 
+  ///
   /// Useful when you want to handle specific states differently
   /// and have a default for others.
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// resource.maybeWhen(
@@ -172,13 +156,13 @@ class Resource<T> {
 enum ResourceState {
   /// Initial state before any operation
   initial,
-  
+
   /// Operation is in progress
   loading,
-  
+
   /// Operation completed successfully
   success,
-  
+
   /// Operation failed with an error
   error,
 }

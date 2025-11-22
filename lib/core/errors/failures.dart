@@ -16,10 +16,7 @@ class CacheFailure extends Failure {
 class ApiFailure extends Failure {
   final int? statusCode;
 
-  ApiFailure({
-    super.message = 'API error occurred',
-    this.statusCode,
-  });
+  ApiFailure({super.message = 'API error occurred', this.statusCode});
 }
 
 class InvalidDataFailure extends Failure {

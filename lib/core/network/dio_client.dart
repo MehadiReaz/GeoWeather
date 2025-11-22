@@ -4,14 +4,14 @@ import 'package:geo_weather/core/errors/exceptions.dart';
 import 'package:geo_weather/core/services/logger_service.dart';
 
 /// Centralized HTTP client wrapper using Dio for all network requests.
-/// 
+///
 /// This class provides a single, configured instance of Dio with:
 /// - Base URL configuration
 /// - Timeout settings
 /// - Request/response interceptors
 /// - Comprehensive error handling
 /// - Logging for debugging
-/// 
+///
 /// Benefits:
 /// - Consistent configuration across all API calls
 /// - Centralized error handling and conversion to app exceptions
@@ -25,7 +25,7 @@ class DioClient {
   }
 
   /// Configures the Dio instance with app-wide settings.
-  /// 
+  ///
   /// Sets up:
   /// - Base URL for all API calls
   /// - Connection and receive timeouts
@@ -54,7 +54,7 @@ class DioClient {
           LoggerService.debug('Query params: ${options.queryParameters}');
           return handler.next(options);
         },
-        
+
         // Called when a response is received
         onResponse: (response, handler) {
           LoggerService.network(
@@ -65,7 +65,7 @@ class DioClient {
           );
           return handler.next(response);
         },
-        
+
         // Called when an error occurs
         onError: (error, handler) {
           LoggerService.error(
@@ -80,13 +80,13 @@ class DioClient {
   }
 
   /// Makes a GET request to the specified path.
-  /// 
+  ///
   /// Parameters:
   /// - [path]: The endpoint path (will be appended to base URL)
   /// - [queryParameters]: Optional query parameters
   /// - [options]: Optional request options to override defaults
   /// - [cancelToken]: Optional token to cancel the request
-  /// 
+  ///
   /// Throws:
   /// - [TimeoutException]: If the request times out
   /// - [ApiException]: For API-specific errors (4xx, 5xx)
@@ -115,7 +115,7 @@ class DioClient {
   }
 
   /// Makes a POST request to the specified path.
-  /// 
+  ///
   /// Used for creating resources or sending data to the server.
   Future<Response> post(
     String path, {
@@ -143,7 +143,7 @@ class DioClient {
   }
 
   /// Makes a PUT request to the specified path.
-  /// 
+  ///
   /// Typically used for updating existing resources.
   Future<Response> put(
     String path, {
@@ -171,7 +171,7 @@ class DioClient {
   }
 
   /// Makes a DELETE request to the specified path.
-  /// 
+  ///
   /// Used for deleting resources from the server.
   Future<Response> delete(
     String path, {
@@ -199,7 +199,7 @@ class DioClient {
   }
 
   /// Converts Dio exceptions to our custom app exceptions.
-  /// 
+  ///
   /// This centralizes error handling and provides meaningful error messages
   /// that can be displayed to users or used for recovery logic.
   void _handleDioException(DioException e) {
@@ -209,7 +209,7 @@ class DioClient {
       case DioExceptionType.receiveTimeout:
         LoggerService.warning('Request timed out', tag: 'DioClient');
         throw TimeoutException(message: ApiConstants.timeoutError);
-        
+
       case DioExceptionType.badResponse:
         // Server responded with an error status code
         final statusCode = e.response?.statusCode;
@@ -219,37 +219,38 @@ class DioClient {
           tag: 'DioClient',
           error: 'Status: $statusCode, Message: $message',
         );
-        throw ApiException(
-          message: message,
-          statusCode: statusCode,
-        );
-        
+        throw ApiException(message: message, statusCode: statusCode);
+
       case DioExceptionType.cancel:
         LoggerService.info('Request was cancelled', tag: 'DioClient');
         throw NetworkException(message: 'Request cancelled');
-        
+
       case DioExceptionType.connectionError:
         LoggerService.error('Connection error occurred', tag: 'DioClient');
         throw NetworkException(message: ApiConstants.networkError);
-        
+
       default:
-        LoggerService.error('Unknown network error', tag: 'DioClient', error: e.message);
+        LoggerService.error(
+          'Unknown network error',
+          tag: 'DioClient',
+          error: e.message,
+        );
         throw NetworkException(message: e.message ?? ApiConstants.networkError);
     }
   }
 
   /// Extracts a user-friendly error message from the API response.
-  /// 
+  ///
   /// Many APIs return error details in the response body.
   /// This method attempts to extract and format those messages.
   String _getErrorMessageFromResponse(Response? response) {
     if (response == null) return ApiConstants.networkError;
-    
+
     try {
       // Try to extract error message from response data
       if (response.data is Map<String, dynamic>) {
         final data = response.data as Map<String, dynamic>;
-        
+
         // Common error message fields in APIs
         if (data.containsKey('message')) {
           return data['message'].toString();
@@ -264,15 +265,14 @@ class DioClient {
     } catch (e) {
       LoggerService.warning('Could not parse error response', tag: 'DioClient');
     }
-    
+
     // Fallback to status-based messages
     final statusCode = response.statusCode;
     if (statusCode == 401) return 'Invalid API key or unauthorized access';
     if (statusCode == 404) return 'Resource not found';
     if (statusCode == 429) return 'Too many requests. Please try again later';
     if (statusCode != null && statusCode >= 500) return 'Server error occurred';
-    
+
     return response.statusMessage ?? ApiConstants.networkError;
   }
 }
-

@@ -2,15 +2,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geo_weather/core/errors/exceptions.dart';
 
 /// Service interface for local data persistence operations.
-/// 
+///
 /// This service wraps SharedPreferences and provides a clean interface
 /// for storing and retrieving data locally on the device.
-/// 
+///
 /// Use cases:
 /// - Caching API responses for offline access
 /// - Storing user preferences (theme, units, language)
 /// - Persisting app state between sessions
-/// 
+///
 /// Benefits of this abstraction:
 /// - Easy to mock in tests
 /// - Can add encryption layer if needed

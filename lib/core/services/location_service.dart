@@ -2,15 +2,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geo_weather/core/errors/exceptions.dart';
 
 /// Simple data class holding geographic location information.
-/// 
+///
 /// Contains the essential location data needed by the app.
 /// Using a custom class instead of the Geolocator's Position class
 /// keeps our code independent of the specific location package.
 class LocationData {
-  final double latitude;      // Geographic latitude (-90 to 90)
-  final double longitude;     // Geographic longitude (-180 to 180)
-  final double accuracy;      // Location accuracy in meters
-  final DateTime timestamp;   // When this location was determined
+  final double latitude; // Geographic latitude (-90 to 90)
+  final double longitude; // Geographic longitude (-180 to 180)
+  final double accuracy; // Location accuracy in meters
+  final DateTime timestamp; // When this location was determined
 
   LocationData({
     required this.latitude,
@@ -21,13 +21,13 @@ class LocationData {
 }
 
 /// Service interface for accessing device location capabilities.
-/// 
+///
 /// This service abstracts the geolocator package and provides a clean
 /// interface for location operations. It handles:
 /// - Checking if location services are enabled
 /// - Managing location permissions
 /// - Getting current device coordinates
-/// 
+///
 /// By abstracting the location package, we can easily:
 /// - Mock location services in tests
 /// - Switch to a different location package if needed
@@ -73,9 +73,7 @@ class LocationServiceImpl implements LocationService {
     try {
       final isServiceEnabled = await isLocationServiceEnabled();
       if (!isServiceEnabled) {
-        throw LocationException(
-          message: 'Location service is disabled',
-        );
+        throw LocationException(message: 'Location service is disabled');
       }
 
       var permission = await checkPermission();

@@ -10,17 +10,11 @@ class SettingsPage extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Settings',
-        centerTitle: true,
-      ),
+      appBar: const CustomAppBar(title: 'Settings', centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(
-            'Display',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          Text('Display', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 16),
           Card(
             child: Padding(
@@ -48,10 +42,7 @@ class SettingsPage extends GetView<SettingsController> {
             ),
           ),
           const SizedBox(height: 24),
-          Text(
-            'General',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          Text('General', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 16),
           Card(
             child: Padding(

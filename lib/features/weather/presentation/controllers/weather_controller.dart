@@ -5,17 +5,17 @@ import 'package:geo_weather/features/weather/domain/usecases/get_current_weather
 import 'package:geo_weather/features/weather/domain/usecases/get_weather_for_city.dart';
 
 /// Controller managing the weather feature's state and business logic.
-/// 
+///
 /// This controller follows the GetX pattern for state management and acts as
 /// the bridge between the UI and the domain layer (use cases).
-/// 
+///
 /// Responsibilities:
 /// - Managing loading, error, and data states
 /// - Coordinating weather data fetching via use cases
 /// - Handling location services for current location weather
 /// - Providing refresh functionality
 /// - Exposing reactive state to the UI layer
-/// 
+///
 /// The controller doesn't contain business logic - that lives in use cases.
 /// It only orchestrates the flow and manages presentation state.
 class WeatherController extends GetxController {
@@ -43,12 +43,12 @@ class WeatherController extends GetxController {
   }
 
   /// Fetches weather data for the device's current GPS location.
-  /// 
+  ///
   /// Flow:
   /// 1. Gets the device's current location from location service
   /// 2. Calls the GetCurrentWeather use case with coordinates
   /// 3. Updates state based on success or failure
-  /// 
+  ///
   /// Handles:
   /// - Location permission errors
   /// - Network errors
@@ -61,7 +61,7 @@ class WeatherController extends GetxController {
 
       // Get device's current GPS coordinates
       final location = await locationService.getCurrentLocation();
-      
+
       // Call the use case with proper parameters
       final result = await getCurrentWeather(
         GetCurrentWeatherParams(
@@ -84,12 +84,12 @@ class WeatherController extends GetxController {
   }
 
   /// Fetches weather data for a specific city by name.
-  /// 
+  ///
   /// This is used when users search for weather in a different location.
-  /// 
+  ///
   /// Parameters:
   /// - [city]: The name of the city to search for
-  /// 
+  ///
   /// Note: Basic validation should be done in the UI before calling this.
   Future<void> fetchWeatherForCity(String city) async {
     try {
@@ -115,10 +115,10 @@ class WeatherController extends GetxController {
   }
 
   /// Refreshes the current weather data.
-  /// 
+  ///
   /// If weather data is already loaded, it refreshes data for the same city.
   /// Otherwise, it fetches weather for the current location.
-  /// 
+  ///
   /// This is typically called by pull-to-refresh gestures.
   Future<void> refreshWeather() async {
     if (weather.value != null) {
@@ -130,4 +130,3 @@ class WeatherController extends GetxController {
     }
   }
 }
-

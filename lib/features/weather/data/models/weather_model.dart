@@ -2,19 +2,19 @@ import 'package:geo_weather/core/errors/exceptions.dart';
 import 'package:geo_weather/features/weather/domain/entities/weather_entity.dart';
 
 /// Data layer model for weather information with JSON serialization.
-/// 
+///
 /// This class extends WeatherEntity and adds serialization capabilities
 /// for converting between JSON (from API) and Dart objects.
-/// 
+///
 /// Responsibilities:
 /// - Parse JSON from OpenWeatherMap API responses
 /// - Serialize weather data back to JSON for caching
 /// - Handle null values and provide sensible defaults
 /// - Transform API data format to match our domain entity
-/// 
+///
 /// The model pattern keeps serialization logic out of the domain layer,
 /// maintaining clean architecture separation.
-/// 
+///
 /// Inherits Equatable from WeatherEntity for value-based equality.
 class WeatherModel extends WeatherEntity {
   const WeatherModel({
@@ -41,13 +41,13 @@ class WeatherModel extends WeatherEntity {
   });
 
   /// Factory constructor to create WeatherModel from JSON with validation.
-  /// 
+  ///
   /// This method parses JSON from OpenWeatherMap API and handles:
   /// - Missing or null fields with sensible defaults
   /// - Type conversions (int to double, etc.)
   /// - Nested data structure navigation
   /// - Invalid data with validation
-  /// 
+  ///
   /// Throws [InvalidDataException] if critical fields are missing or invalid.
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
     try {
@@ -84,33 +84,33 @@ class WeatherModel extends WeatherEntity {
         id: json['id'] as int,
         city: json['name'] as String? ?? 'Unknown',
         country: sys?['country'] as String? ?? '',
-        
+
         // Coordinates with safe conversion
         latitude: _toDouble(coord['lat']),
         longitude: _toDouble(coord['lon']),
-        
+
         // Temperature data with safe conversion
         temperature: _toDouble(main['temp']),
         feelsLike: _toDouble(main['feels_like']),
         minTemperature: _toDouble(main['temp_min']),
         maxTemperature: _toDouble(main['temp_max']),
-        
+
         // Atmospheric conditions with safe conversion
         humidity: _toInt(main['humidity']),
         pressure: _toInt(main['pressure']),
         windSpeed: _toDouble(wind?['speed']),
-        
+
         // Weather description
         description: weather['description'] as String? ?? '',
         main: weather['main'] as String? ?? '',
         icon: weather['icon'] as String? ?? '01d',
-        
+
         // Additional data
         cloudiness: _toInt(clouds?['all']),
         visibility: _toInt(json['visibility']),
         sunrise: _toInt(sys?['sunrise']),
         sunset: _toInt(sys?['sunset']),
-        
+
         // Timestamp - validate it's not too far in the past/future
         dateTime: _parseDateTime(json['dt']),
       );
@@ -142,17 +142,17 @@ class WeatherModel extends WeatherEntity {
   }
 
   /// Parses a Unix timestamp to DateTime with validation.
-  /// 
+  ///
   /// Validates the timestamp is reasonable (not too far in past/future)
   /// to catch obviously invalid data.
   static DateTime _parseDateTime(dynamic value) {
     final timestamp = _toInt(value);
-    
+
     // Validate timestamp is reasonable (after year 2000, before year 2100)
     if (timestamp < 946684800 || timestamp > 4102444800) {
       return DateTime.now(); // Fallback to current time
     }
-    
+
     return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
   }
 
@@ -161,10 +161,7 @@ class WeatherModel extends WeatherEntity {
     return {
       'id': id,
       'name': city,
-      'coord': {
-        'lat': latitude,
-        'lon': longitude,
-      },
+      'coord': {'lat': latitude, 'lon': longitude},
       'main': {
         'temp': temperature,
         'feels_like': feelsLike,
@@ -173,25 +170,13 @@ class WeatherModel extends WeatherEntity {
         'humidity': humidity,
         'pressure': pressure,
       },
-      'wind': {
-        'speed': windSpeed,
-      },
+      'wind': {'speed': windSpeed},
       'weather': [
-        {
-          'description': description,
-          'main': main,
-          'icon': icon,
-        }
+        {'description': description, 'main': main, 'icon': icon},
       ],
-      'clouds': {
-        'all': cloudiness,
-      },
+      'clouds': {'all': cloudiness},
       'visibility': visibility,
-      'sys': {
-        'country': country,
-        'sunrise': sunrise,
-        'sunset': sunset,
-      },
+      'sys': {'country': country, 'sunrise': sunrise, 'sunset': sunset},
       'dt': dateTime.millisecondsSinceEpoch ~/ 1000,
     };
   }

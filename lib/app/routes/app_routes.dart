@@ -1,9 +1,9 @@
 /// Centralized route constants for app navigation.
-/// 
+///
 /// Keeping route names as constants prevents typos and makes
 /// navigation more maintainable. If a route changes, we only
 /// need to update it in one place.
-/// 
+///
 /// Usage:
 /// ```dart
 /// Get.toNamed(AppRoutes.settings);
