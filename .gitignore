@@ -15,7 +15,7 @@ ios/Flutter/Flutter.podspec
 ios/Flutter/Generated.xcconfig
 ios/Flutter/ephemeral/
 *.app
-*.apk
+# *.apk
 *.ipa
 
 # CocoaPods
